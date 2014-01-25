@@ -6,8 +6,14 @@ module ActiveAbility
       @params = params
     end
 
-    def match?(params)
-      params.keys == @params
+    def order_params_values(unordered_params)
+      params.collect do |param|
+        unordered_params[param]
+      end
+    end
+
+    def match?(params_to_match)
+      params_to_match.keys.sort == params.sort
     end
   end
 end
