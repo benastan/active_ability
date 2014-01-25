@@ -9,8 +9,10 @@ module ActiveAbility
       params_conditions.push(ParamsConditions.new(*params))
     end
 
-    def params_conditions
-      @params_conditions ||= []
+    def from_params(params)
+      params_conditions = match_params(params)
+      ordered_params = params_conditions.order_params_values(params)
+      new(*ordered_params)
     end
 
     def match_params(params)
@@ -23,6 +25,10 @@ module ActiveAbility
       ! match_params(params).nil?
     end
 
+    def params_conditions
+      @params_conditions ||= []
+    end
+
     class << self
       def ability_classes
         @ability_classes ||= []
@@ -32,7 +38,14 @@ module ActiveAbility
         ability_classes << klass
       end
 
-      def query_abilities(params)
+      def instantiate_matching_ability_classes(params)
+        matching_ability_classes = query_ability_classes(params)
+        matching_ability_classes.collect do |ability_class|
+          ability_class.from_params(params)
+        end
+      end
+
+      def query_ability_classes(params)
         ability_classes.select do |ability_class|
           ability_class.match?(params)
         end
