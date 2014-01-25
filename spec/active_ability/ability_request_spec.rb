@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ActiveAbility::AbilityRequest do
-	let(:controller) { double(:controller, params: { book_id: 1 }) }
+  let(:controller) { double(:controller, params: { book_id: 1 }) }
 
   let(:ability_class) do
     klass = Class.new
@@ -9,11 +9,11 @@ describe ActiveAbility::AbilityRequest do
     klass
   end
 
-	subject(:ability_request) { ActiveAbility::AbilityRequest.new(controller)  }
+  subject(:ability_request) { ActiveAbility::AbilityRequest.new(controller)  }
 
-	describe '#initialize' do
-		its(:controller) { should == controller }
-		its(:params) { should include({ book_id: 1 }) }
+  describe '#initialize' do
+    its(:controller) { should == controller }
+    its(:params) { should include({ book_id: 1 }) }
 
     it 'calls finds matching abilities' do
       ActiveAbility::Ability.stub(:instantiate_matching_ability_classes) { 'banana fries' }
@@ -30,5 +30,5 @@ describe ActiveAbility::AbilityRequest do
       ability_request
       controller.ability_request.should == ability_request
     end
-	end
+  end
 end
